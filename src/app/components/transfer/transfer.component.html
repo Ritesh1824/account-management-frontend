@@ -1,0 +1,71 @@
+<form class="container-fluid w-55 p-4" [formGroup]="transferForm" >
+    <div class="mb-5">
+        <h3>Transfer Money</h3>
+    </div>
+    <div class="row ">
+        <div class="form-group col-4 ">
+            <label for="debitaccount">Debit Account : {{transferAccountDetails?.Debit.currency}}</label>
+            <input type="input" class="form-control " id="debitaccount" formControlName="debitAccount">
+            <small id="debitaccountHelp" class="form-text text-muted">Enter debit account number</small>
+            <div *ngIf="transferForm.get('debitAccount').touched && transferForm.get('debitAccount').invalid" >
+                <div  class="alert alert-danger h-10" *ngIf="transferForm.get('debitAccount').errors?.['required']">
+                    Debit Account is required
+                </div>
+                <div  class="alert alert-danger h-10" *ngIf="transferForm.get('debitAccount').errors?.['pattern']">
+                    Only number is allowed
+                </div>
+              
+            </div>
+            <div  class="alert alert-danger h-10" *ngIf=" errorMsg?.errorType == 'Debit' ">
+                {{errorMsg.errorMessage }} 
+            </div>
+  
+        </div>
+        <div class="form-group col-4">
+            <label for="creditaccount">Credit Account : {{transferAccountDetails?.Credit.currency}}  </label>
+            <input type="input" class="form-control" id="creditaccount" formControlName="creditAccount">
+            <small id="creditaccountHelp" class="form-text text-muted">Enter credit account number</small>
+            <div  class="alert alert-danger h-10" role="alert" *ngIf="transferForm.get('creditAccount').touched && transferForm.get('creditAccount').errors?.['required']">
+                Credit Account is required.
+            </div>
+            <div  class="alert alert-danger h-10" role="alert" *ngIf="transferForm.get('creditAccount').touched && transferForm.get('debitAccount').value === transferForm.get('creditAccount').value">
+                Credit Account can not be same as Debit Account.
+            </div>
+            <div  class="alert alert-danger h-10" *ngIf=" errorMsg?.errorType == 'Credit' ">
+                {{errorMsg.errorMessage }} 
+            </div>
+            <div  class="alert alert-danger h-10" *ngIf="transferForm.get('creditAccount').errors?.['pattern']">
+                Only number is allowed
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="form-group col-4">
+            <label for="amount">Amount in :  {{transferAccountDetails?.Debit.currency}} </label>
+            <input type="input" class="form-control" id="amount" formControlName="amount">
+            <small id="amountHelp" class="form-text text-muted" *ngIf="transferAccountDetails?.Debit.balance">Remaining Balance : {{transferAccountDetails?.Debit.balance - transferForm.get('amount').value}} </small>
+            <div  class="alert alert-danger h-10"  *ngIf="transferForm.get('amount').touched && transferForm.get('amount').errors?.['required']">
+                Amount is required.
+            </div>
+            <div  class="alert alert-danger h-10" *ngIf=" errorMsg?.errorMessage == 'Insufficient Balance' ">
+                {{errorMsg.errorMessage }} 
+            </div>
+            <div  class="alert alert-danger h-10" *ngIf="transferForm.get('amount').errors?.['pattern']">
+                Only number is allowed
+            </div>
+        </div>
+        <div class="form-group col-4">
+            <label for="amount">Recipient gets in  :  {{transferAccountDetails?.Credit.currency}} </label>
+            <input type="input" class="form-control" id="calAmount" formControlName="calAmount" readonly value="{{finalAmount}}">
+            <small id="amountHelp" class="form-text text-muted">Conversion rate of : {{conversionRate}} </small>
+        </div>   
+
+    </div>
+
+    <div class="row mt-4">
+        <button type="calculate" class="btn btn-primary  col-1 mx-5" (click)="calculate()">calculate</button>
+        <button type="submit" class="btn btn-primary  col-1" [disabled]=" transferForm.invalid" (click)="transfer()">Submit</button>
+    </div>
+       
+</form>

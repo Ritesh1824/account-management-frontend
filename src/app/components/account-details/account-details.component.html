@@ -1,0 +1,18 @@
+
+<table class="table table-striped w-50 p-3">
+    <thead>
+        <tr>
+          <th scope="col">Account Number</th>
+          <th scope="col">Currency</th>
+          <th scope="col">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let account of allCustomerDetails">
+          <td>{{account.accountNumber}}</td>
+          <td>{{account.currency}}</td>
+          <td>{{account.balance}}</td>
+        </tr>
+        
+      </tbody>
+</table>
